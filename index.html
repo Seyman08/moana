@@ -1,0 +1,480 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>A Special Message 💖</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Courier New', monospace;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: #fff;
+        }
+
+        .page {
+            display: none;
+            width: 100%;
+            max-width: 1200px;
+            padding: 20px;
+        }
+
+        .page.active {
+            display: block;
+        }
+
+        /* Landing Page */
+        .terminal-box {
+            background: #1e1e1e;
+            border: 2px solid #4CAF50;
+            border-radius: 10px;
+            padding: 30px;
+            max-width: 600px;
+            margin: 0 auto;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+        }
+
+        .terminal-content {
+            font-size: 18px;
+            line-height: 2;
+            color: #4CAF50;
+            min-height: 150px;
+        }
+
+        .cursor {
+            display: inline-block;
+            width: 10px;
+            height: 20px;
+            background: #4CAF50;
+            animation: blink 1s infinite;
+        }
+
+        @keyframes blink {
+            0%, 50% { opacity: 1; }
+            51%, 100% { opacity: 0; }
+        }
+
+        button {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 15px 40px;
+            font-size: 18px;
+            border-radius: 50px;
+            cursor: pointer;
+            margin-top: 20px;
+            transition: all 0.3s ease;
+            font-family: 'Courier New', monospace;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+        }
+
+        button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.4);
+        }
+
+        button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        /* Editor Page */
+        .editor-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .editor-panel {
+            background: #1e1e1e;
+            border-radius: 10px;
+            padding: 30px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+        }
+
+        .letter-content {
+            font-size: 16px;
+            line-height: 1.8;
+            color: #fff;
+            white-space: pre-wrap;
+            min-height: 400px;
+        }
+
+        .slideshow {
+            position: relative;
+            height: 400px;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .slide {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            transition: opacity 1s ease-in-out;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: #333;
+        }
+
+        .slide.active-slide {
+            opacity: 1;
+        }
+
+
+
+        .slide-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .slide-placeholder {
+            color: #888;
+            font-size: 16px;
+            text-align: center;
+            padding: 20px;
+        }
+
+        /* Console Page */
+        .console-box {
+            background: #1e1e1e;
+            border: 2px solid #4CAF50;
+            border-radius: 10px;
+            padding: 30px;
+            max-width: 700px;
+            margin: 0 auto;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+        }
+
+        .console-output {
+            font-size: 18px;
+            line-height: 2;
+            color: #4CAF50;
+            margin-bottom: 30px;
+            min-height: 150px;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        /* Yes Page */
+        .yes-page {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+        }
+
+        .success-box {
+            text-align: center;
+            padding: 50px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 20px;
+            backdrop-filter: blur(10px);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .success-box h1 {
+            font-size: 42px;
+            margin-bottom: 20px;
+            animation: celebrate 0.5s ease-in-out;
+            line-height: 1.3;
+        }
+
+        .success-box p {
+            font-size: 20px;
+            margin-bottom: 30px;
+            line-height: 1.6;
+        }
+
+        /* Confetti */
+        .confetti {
+            position: fixed;
+            width: 10px;
+            height: 10px;
+            background: #f0f;
+            position: absolute;
+            animation: confetti-fall 3s linear infinite;
+        }
+
+        @keyframes confetti-fall {
+            to {
+                transform: translateY(100vh) rotate(360deg);
+                opacity: 0;
+            }
+        }
+
+        @keyframes celebrate {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+
+        /* No Page */
+        .no-page {
+            background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+        }
+
+        .error-box {
+            text-align: center;
+            padding: 50px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 20px;
+            backdrop-filter: blur(10px);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .error-box h1 {
+            font-size: 48px;
+            margin-bottom: 20px;
+            color: #e74c3c;
+        }
+
+        .error-box p {
+            font-size: 24px;
+            margin-bottom: 30px;
+        }
+
+        @media (max-width: 768px) {
+            .editor-container {
+                grid-template-columns: 1fr;
+            }
+            
+            .terminal-box, .console-box, .success-box, .error-box {
+                padding: 20px;
+            }
+            
+            button {
+                padding: 12px 30px;
+                font-size: 16px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Landing Page -->
+    <div id="landingPage" class="page active">
+        <div class="terminal-box">
+            <div class="terminal-content" id="terminalContent"></div>
+            <button id="continueBtn" style="display:none;" onclick="goToEditor()">Continue</button>
+        </div>
+    </div>
+
+    <!-- Editor Page -->
+    <div id="editorPage" class="page">
+        <div class="editor-container">
+            <div class="editor-panel">
+                <div class="letter-content" id="letterContent"></div>
+                <button id="runCodeBtn" disabled onclick="goToConsole()">Run Code ▶</button>
+            </div>
+            <div class="editor-panel">
+                <div class="slideshow">
+                    <div class="slide active-slide">
+                        <img class="slide-image" src="henry-babe1.jpg" alt="Memory 1">
+                        <div class="slide-placeholder">Moana</div>
+                    </div>
+                    <div class="slide">
+                        <img class="slide-image" src="henry-babe 2.jpg" alt="Memory 2">
+                        <div class="slide-placeholder">Moana</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Console Page -->
+    <div id="consolePage" class="page">
+        <div class="console-box">
+            <div class="console-output" id="consoleOutput"></div>
+            <div class="button-group" id="answerButtons" style="display:none;">
+                <button onclick="goToYes()" style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);">Yes ❤️</button>
+                <button onclick="goToNo()" style="background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);">No 😢</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Yes Page -->
+    <div id="yesPage" class="page yes-page">
+        <div class="success-box">
+            <h1>My heart just found its home 💖</h1>
+            <p>Thank you for saying yes... I can't wait to write our story together 💜</p>
+            <button onclick="location.reload()">Start Our Journey</button>
+        </div>
+    </div>
+
+    <!-- No Page -->
+    <div id="noPage" class="page no-page">
+        <div class="error-box">
+            <h1>System crashed... 💔</h1>
+            <p>Error: Unhandled heartbreak 💔</p>
+            <button onclick="location.reload()">Retry</button>
+        </div>
+    </div>
+
+    <script>
+        // Terminal typing effect
+        const terminalLines = [
+            "Initializing...",
+            "Connecting to Moana_server...",
+            "Running love_query()..."
+        ];
+
+        let currentLine = 0;
+        let currentChar = 0;
+        const terminalContent = document.getElementById('terminalContent');
+
+        function typeTerminal() {
+            if (currentLine < terminalLines.length) {
+                if (currentChar < terminalLines[currentLine].length) {
+                    terminalContent.innerHTML += terminalLines[currentLine][currentChar];
+                    currentChar++;
+                    setTimeout(typeTerminal, 50);
+                } else {
+                    terminalContent.innerHTML += '<br>';
+                    currentLine++;
+                    currentChar = 0;
+                    setTimeout(typeTerminal, 500);
+                }
+            } else {
+                terminalContent.innerHTML += '<span class="cursor"></span>';
+                document.getElementById('continueBtn').style.display = 'inline-block';
+            }
+        }
+
+        // Letter typing effect
+        const letterText = `My Moana 🌺❤️
+Hey mmesomachi 🥺❤️,
+I've been meaning to say this for a while, but I wanted to find the right words and time.
+Every moment with you feels like something out of a beautiful story.
+The laughter, the late-night talks, the late night stroll.
+You bring this warmth and energy that makes everything feel lighter, more meaningful.
+You remind me of Moana, brave, kind, full of heart, and unafraid to chase what she believes in.
+And honestly, I can't imagine this journey without you by my side.
+So, here I am, heart in hand, asking you… `;
+
+        let letterIndex = 0;
+        const letterContent = document.getElementById('letterContent');
+
+        function typeLetter() {
+            if (letterIndex < letterText.length) {
+                letterContent.textContent += letterText[letterIndex];
+                letterIndex++;
+                setTimeout(typeLetter, 30);
+            } else {
+                document.getElementById('runCodeBtn').disabled = false;
+            }
+        }
+
+        // Slideshow
+        let slideIndex = 0;
+        let slideshowInterval;
+
+        function showSlides() {
+            const slides = document.querySelectorAll('.slide');
+            slides.forEach(slide => slide.classList.remove('active-slide'));
+            slideIndex = (slideIndex + 1) % slides.length;
+            slides[slideIndex].classList.add('active-slide');
+        }
+
+        // Console typing
+        const consoleLines = [
+            "> Running confess()...",
+            "> Every variable in my life points to you, Mmesomachi.",
+            "> Will you be my Moana? ❤️"
+        ];
+
+        let consoleLine = 0;
+        let consoleChar = 0;
+        const consoleOutput = document.getElementById('consoleOutput');
+
+        function typeConsole() {
+            if (consoleLine < consoleLines.length) {
+                if (consoleChar < consoleLines[consoleLine].length) {
+                    consoleOutput.innerHTML += consoleLines[consoleLine][consoleChar];
+                    consoleChar++;
+                    setTimeout(typeConsole, 50);
+                } else {
+                    consoleOutput.innerHTML += '<br>';
+                    consoleLine++;
+                    consoleChar = 0;
+                    setTimeout(typeConsole, 500);
+                }
+            } else {
+                consoleOutput.innerHTML += '<span class="cursor"></span>';
+                document.getElementById('answerButtons').style.display = 'flex';
+            }
+        }
+
+        // Navigation functions
+        function goToEditor() {
+            document.getElementById('landingPage').classList.remove('active');
+            document.getElementById('editorPage').classList.add('active');
+            typeLetter();
+            slideshowInterval = setInterval(showSlides, 4000);
+        }
+
+        function goToConsole() {
+            clearInterval(slideshowInterval);
+            document.getElementById('editorPage').classList.remove('active');
+            document.getElementById('consolePage').classList.add('active');
+            typeConsole();
+        }
+
+        function goToYes() {
+            document.getElementById('consolePage').classList.remove('active');
+            document.getElementById('yesPage').classList.add('active');
+            createConfetti();
+        }
+
+        function goToNo() {
+            document.getElementById('consolePage').classList.remove('active');
+            document.getElementById('noPage').classList.add('active');
+        }
+
+        // Confetti function
+        function createConfetti() {
+            const colors = ['#ff6b6b', '#4ecdc4', '#45b7d1', '#f9ca24', '#f093fb', '#4facfe', '#fa8bff', '#2bcbba'];
+            const confettiCount = 100;
+            
+            for (let i = 0; i < confettiCount; i++) {
+                setTimeout(() => {
+                    const confetti = document.createElement('div');
+                    confetti.className = 'confetti';
+                    confetti.style.left = Math.random() * 100 + '%';
+                    confetti.style.background = colors[Math.floor(Math.random() * colors.length)];
+                    confetti.style.width = Math.random() * 10 + 5 + 'px';
+                    confetti.style.height = Math.random() * 10 + 5 + 'px';
+                    confetti.style.animationDuration = Math.random() * 2 + 2 + 's';
+                    confetti.style.animationDelay = Math.random() * 0.5 + 's';
+                    
+                    document.getElementById('yesPage').appendChild(confetti);
+                    
+                    setTimeout(() => confetti.remove(), 4000);
+                }, i * 20);
+            }
+        }
+
+        // Start terminal typing on load
+        window.onload = () => {
+            setTimeout(typeTerminal, 500);
+        };
+    </script>
+</body>
+</html>
