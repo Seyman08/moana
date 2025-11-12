@@ -451,7 +451,7 @@
                         <div class="slide-placeholder"></div>
                     </div>
                     <div class="slide">
-                        <img class="slide-image" src="henry-babe  3.jpg" alt="Memory 3">
+                        <img class="slide-image" src="henry-babe  3.jpg" alt="Memory 2">
                         <div class="slide-placeholder"></div>
                     </div>
                 </div>
@@ -541,15 +541,8 @@
 
         // For desktop: auto-start (will be blocked on mobile anyway)
         window.onload = () => {
-            // Try to autoplay (will work on desktop, fail on mobile)
-            video.play().then(() => {
-                // If autoplay works (desktop), hide the start button
-                startOverlay.classList.add('hidden');
-                startExperience();
-            }).catch(() => {
-                // Autoplay blocked (mobile) - show start button
-                console.log('Autoplay blocked - showing start button');
-            });
+            // Don't try to autoplay - always wait for user interaction
+            console.log('Page loaded - waiting for user to click Start');
         };
 
         // Terminal typing effect
