@@ -591,6 +591,7 @@ So, here I am, heart in hand, asking you… `;
             if (letterIndex < letterText.length) {
                 letterContent.textContent += letterText[letterIndex];
                 letterIndex++;
+                letterContent.scrollTop = letterContent.scrollHeight;
                 setTimeout(typeLetter, 30);
             } else {
                 document.getElementById('runCodeBtn').disabled = false;
