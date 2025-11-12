@@ -208,20 +208,16 @@
         }
 
         /* Editor Page */
-        .editor-container {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 20px;
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-
         .editor-panel {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between; /* keeps button at bottom */
             background: linear-gradient(135deg, #fff 0%, #ffe6f2 100%);
             border-radius: 20px;
-            padding: 30px;
+            padding: 20px 30px;
             box-shadow: 0 10px 40px rgba(255, 128, 191, 0.3);
             border: 2px solid #ffb3d9;
+            min-height: 500px; /* ensures panel has enough height */
         }
 
         .letter-content {
@@ -229,8 +225,17 @@
             line-height: 1.8;
             color: #d6006e;
             white-space: pre-wrap;
-            min-height: 400px;
+            max-height: 400px;    /* fixed height for content */
+            overflow-y: auto;     /* scroll if content exceeds */
+            padding-right: 10px;  /* prevent scrollbar overlap */
         }
+
+        /* ensures button container stays below the letter */
+        .letter-actions {
+            text-align: center;
+            margin-top: 15px;
+        }
+
 
         .slideshow {
             position: relative;
@@ -438,26 +443,20 @@
         <div class="editor-container">
             <div class="editor-panel">
                 <div class="letter-content" id="letterContent"></div>
-                <button id="runCodeBtn" disabled onclick="goToConsole()">Run Code ▶</button>
-            </div>
-            <!-- <div class="editor-panel">
-                <div class="slideshow">
-                    <div class="slide active-slide">
-                        <img class="slide-image" src="henry-babe1.jpg" alt="Memory 1">
-                        <div class="slide-placeholder"></div>
-                    </div>
-                    <div class="slide">
-                        <img class="slide-image" src="henry-babe 2.jpg" alt="Memory 2">
-                        <div class="slide-placeholder"></div>
-                    </div>
-                    <div class="slide">
-                        <img class="slide-image" src="henry-babe  3.jpg" alt="Memory 2">
-                        <div class="slide-placeholder"></div>
-                    </div>
+                <div class="letter-actions">
+                    <button id="runCodeBtn" disabled onclick="goToConsole()">Run Code ▶</button>
                 </div>
-            </div> -->
+            </div>
+
+            <!-- Optional slideshow panel
+            <div class="editor-panel">
+                <div class="slideshow">
+                    <!-- slides here -->
+                <!-- </div>
+            </div>  -->
         </div>
     </div>
+
 
     <!-- Console Page -->
     <div id="consolePage" class="page">
