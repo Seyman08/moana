@@ -47,6 +47,52 @@
             z-index: 9999;
         }
 
+        /* Start button overlay */
+        .start-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 10001;
+            gap: 20px;
+        }
+
+        .start-overlay.hidden {
+            display: none;
+        }
+
+        .start-button {
+            background: linear-gradient(135deg, #ff80bf 0%, #ff1493 100%);
+            color: white;
+            border: none;
+            padding: 20px 50px;
+            font-size: 24px;
+            border-radius: 50px;
+            cursor: pointer;
+            font-family: 'Courier New', monospace;
+            box-shadow: 0 10px 30px rgba(255, 20, 147, 0.5);
+            font-weight: bold;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        .start-text {
+            color: white;
+            font-size: 18px;
+            text-align: center;
+            padding: 0 20px;
+        }
+
         .video-container {
             width: 100%;
             height: 100%;
@@ -346,8 +392,14 @@
 <body>
     <!-- Video Intro Page -->
     <div id="videoPage" class="page active video-page">
+        <!-- Start Button Overlay for Mobile -->
+        <div id="startOverlay" class="start-overlay">
+            <p class="start-text">Tap to begin your special message 💖</p>
+            <button class="start-button" onclick="startExperience()">Start ▶</button>
+        </div>
+        
         <div class="video-container">
-            <video id="introVideo" playsinline>
+            <video id="introVideo" playsinline muted>
                 <source src="hemry_sznvid.mp4" type="video/mp4">
                 Your browser does not support the video tag.
             </video>
@@ -360,7 +412,7 @@
     <!-- Music Configuration (Edit these values) -->
     <script>
         // MUSIC SETTINGS - Edit start and end times here
-        const MUSIC_START_TIME = 19;  // Start time in seconds (e.g., 5 for 5 seconds in)
+        const MUSIC_START_TIME = 19.5;  // Start time in seconds (e.g., 5 for 5 seconds in)
         const MUSIC_END_TIME = 0;    // End time in seconds (0 = play until video ends)
     </script>
 
@@ -386,15 +438,15 @@
                 <div class="slideshow">
                     <div class="slide active-slide">
                         <img class="slide-image" src="henry-babe1.jpg" alt="Memory 1">
-                        <div class="slide-placeholder"></div>
+                        <div class="slide-placeholder">Add your first image URL</div>
                     </div>
                     <div class="slide">
                         <img class="slide-image" src="henry-babe 2.jpg" alt="Memory 2">
-                        <div class="slide-placeholder"></div>
+                        <div class="slide-placeholder">Add your second image URL</div>
                     </div>
-                    <div class="slide">
+                    div class="slide">
                         <img class="slide-image" src="henry-babe  3.jpg" alt="Memory 2">
-                        <div class="slide-placeholder"></div>
+                        <div class="slide-placeholder">Add your second image URL</div>
                     </div>
                 </div>
             </div>
@@ -434,17 +486,24 @@
         const video = document.getElementById('introVideo');
         const music = document.getElementById('bgMusic');
         const shutdown = document.getElementById('shutdown');
+        const startOverlay = document.getElementById('startOverlay');
 
-        // Video intro with music
-        window.onload = () => {
-            // Set music start time
+        // Function to start the experience (required for mobile)
+        function startExperience() {
+            // Hide the start overlay
+            startOverlay.classList.add('hidden');
+            
+            // Unmute video and start playback
+            video.muted = false;
+            video.playbackRate = 0.5; // Slow motion (50% speed)
+            
+            // Set music start time and play
             music.currentTime = MUSIC_START_TIME;
             
-            // Start playing video and music
-            video.playbackRate = 0.5; // Slow motion (50% speed)
-            video.play();
-            music.play();
-
+            // Play both video and music
+            video.play().catch(e => console.log('Video play error:', e));
+            music.play().catch(e => console.log('Music play error:', e));
+            
             // Stop music at specified end time if set
             if (MUSIC_END_TIME > 0) {
                 music.addEventListener('timeupdate', () => {
@@ -453,7 +512,7 @@
                     }
                 });
             }
-
+            
             // When video ends, trigger shutdown effect
             video.addEventListener('ended', () => {
                 // DON'T pause music - let it continue playing
@@ -468,6 +527,19 @@
                     document.getElementById('landingPage').classList.add('active');
                     typeTerminal();
                 }, 2000);
+            });
+        }
+
+        // For desktop: auto-start (will be blocked on mobile anyway)
+        window.onload = () => {
+            // Try to autoplay (will work on desktop, fail on mobile)
+            video.play().then(() => {
+                // If autoplay works (desktop), hide the start button
+                startOverlay.classList.add('hidden');
+                startExperience();
+            }).catch(() => {
+                // Autoplay blocked (mobile) - show start button
+                console.log('Autoplay blocked - showing start button');
             });
         };
 
